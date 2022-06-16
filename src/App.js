@@ -1,12 +1,15 @@
 import React from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import { AppBar, Box, Toolbar, Typography, Button, IconButton, Drawer } from '@mui/material';
+import { AppBar, Box, Toolbar, Typography, IconButton, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import './App.css';
 import DrawerMenu from './components/DrawerMenu';
+import Login from './components/Login';
 
-const Index = React.lazy(() => import('./pages/Index'));
-const Days = React.lazy(() => import('./pages/Days'));
+// const Index = React.lazy(() => import('./pages/Index'));
+// const Days = React.lazy(() => import('./pages/Days'));
+import Index from './pages/Index';
+import Days from './pages/Days';
 
 
 function App() {
@@ -18,7 +21,7 @@ function App() {
     }
     setDrawerOpen(open)
   }
-  const isMetaMask = window.ethereum && window.ethereum.isMetaMask;
+  
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ bgcolor: '#F80' }}>
@@ -36,12 +39,12 @@ function App() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Easy Buy
           </Typography>
-          {isMetaMask ? <Button color="inherit">Login</Button> : <></>}
+          <Login />
         </Toolbar>
       </AppBar>
       
       <BrowserRouter>
-        <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)} onClick={toggleDrawer(false)}>
           <DrawerMenu />
         </Drawer>
         <Routes>
