@@ -2,11 +2,37 @@ import React from "react";
 import { Button, Dialog, DialogContent, DialogTitle, Link, List, ListItem, ListItemText } from "@mui/material";
 
 export default function Login() {
+  const eth = window.ethereum;
+
   const [dialogShow, setDialogShow] = React.useState(false);
   const [accounts, setAccounts] = React.useState([]);
   const [chain, setChain] = React.useState('');
+  const isMounted = React.useRef(false);
   
-  const eth = window.ethereum;
+  React.useEffect(() => {
+    console.log('Component did mount')
+    if (!isMounted.current) {
+      eth.request({ method: 'eth_accounts' }).then(arr => {
+        setAccounts(arr)
+      });
+      
+      eth.request({ method: 'eth_chainId' }).then(chainId => {
+        const map = {
+          '0x1': 'Ethereum Main Network (Mainnet)',
+          '0x3': 'Ropsten Test Network',
+          '0x4': 'Rinkeby Test Network',
+          '0x5': 'Goerli Test Network',
+          '0x2a': 'Kovan Test Network',
+        };
+        console.log('After request', chainId);
+        setChain(map[chainId] ? map[chainId] : `Unknown Network ${chainId}`)
+      })
+    }
+    isMounted.current = true;
+    return () => {
+      console.log('Component Login destroyed.');
+    }
+  }, [eth]);
 
   // Try to load accounts
   const connectAccount = (event) => {
@@ -14,25 +40,6 @@ export default function Login() {
       setAccounts(arr)
     })
   }
-  
-  React.useEffect(() => {
-    console.log('useEffect: requesting accounts and chainId', accounts, chain)
-    eth.request({ method: 'eth_accounts' }).then(arr => {
-      setAccounts(arr)
-    });
-    
-    eth.request({ method: 'eth_chainId' }).then(chainId => {
-      const map = {
-        '0x1': 'Ethereum Main Network (Mainnet)',
-        '0x3': 'Ropsten Test Network',
-        '0x4': 'Rinkeby Test Network',
-        '0x5': 'Goerli Test Network',
-        '0x2a': 'Kovan Test Network',
-      };
-      console.log('After request', chainId);
-      setChain(map[chainId] ? map[chainId] : `Unknown Network ${chainId}`)
-    })
-  }, [eth.request]);
 
   const isMetaMask = eth && eth.isMetaMask;
   if (!isMetaMask) return (
