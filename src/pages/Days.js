@@ -2,6 +2,7 @@
 import React from "react";
 import { Avatar, Divider, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { deepOrange, deepPurple, indigo, orange, teal, cyan, brown } from "@mui/material/colors";
+import { Lunar } from "lunar-javascript";
 export default function Days() {
   const holidays = [
     {n:'元旦', d:'2022年1月1日至3日放假，共3天', b: ''},
@@ -14,6 +15,7 @@ export default function Days() {
   ]
   const colors = [deepOrange, deepPurple, indigo, orange, teal, cyan, brown];
   const chooseColor = (idx) => colors[idx % colors.length];
+  console.log(Lunar.fromDate(new Date()).toFullString());
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {holidays.map((h, idx) => (
